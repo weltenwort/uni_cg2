@@ -1,0 +1,73 @@
+\documentclass[a4paper,10pt]{scrartcl}
+\usepackage{fancyhdr}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{enumerate}
+\usepackage[top=2cm, left=2cm, bottom=2cm, right=2cm]{geometry}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{float}
+
+\pagestyle{fancy}
+\headheight30pt
+\fancyhf{}
+\fancyhead[L]{\begin{small}Computer Graphics 2\\Übungsblatt 3\\Gruppe 5\end{small}}
+\fancyhead[R]{\begin{small}Stürmer, Felix - 230127 - Informatik(Diplom) - stuermer@cs.tu-berlin.de\\
+  Oskamp, Robert - 306952 - Mathematik(Diplom) - robert.oskamp@gmx.de\\
+  Olthoff, Inken - 305844 - Mathematik(Diplom) - some-body@gmx.de\\
+  Neumann, Cedrik - 301635 - Mathematik(Diplom) - c.neumann@live.de\end{small}}
+\renewcommand{\headrulewidth}{0.4pt}
+
+
+\begin{document}
+\vspace*{5pt}
+\begin{enumerate}[1.]
+
+\item Damit eine Funktion $g: \mathbb{R}^3 \rightarrow \mathbb{R}$  eine Fläche $F$ ``ordentlich'' implizit beschreibt, sollte nach Definition von impliziten Flächen gelten: $g(p) = 0$ $\forall p \in F$. Zusätzlich sollte $g$ stetig differenzierbar sein, da sich sonst die Normalenvektoren in den Flächenpunkten, die gegeben sind durch $\nabla g(p)$, nicht korrekt bestimmen lassen.
+
+\item Ein von einem Kegelschnitt beschriebener Kreis sieht folgenderma\ss en aus:
+$$K_i = \{ (x,~ y,~ z)^T | x^2 + y^2 + z^2 - r_i^2 = 0 \}$$
+Die algebraische Summe zweier dieser Kreise $K_1$ und $K_2$ sieht dann so aus:
+$$K = K_1 + K_2 = \{ (x,~ y,~ z)^T | x^2 + y^2 + z^2 - (r_1 + r_2)^2 = 0 \} \setminus \{ (x,~ y,~ z)^T | x^2 + y^2 + z^2 - (r_1 - r_2)^2 = 0 \}$$
+ist also ein Kreis mit einem Radius, der gleich der Summe der Radien ist, aus dem ein Kreis mit selbem Zentrum und einem Radius, der gleich der Differenz der beiden Radien ist, ausgeschnitten wird.
+
+\item Sei $f(x)$ die implizite Funktion. Mit Polynomapproximation gilt $f(x) = b(x)^T \cdot c$, wobei der Vektor $b(x)$ die verwendete Polynombasis und der Vektor $c$ die Koeffizienten des Polynoms enthält. Bei Verwendung konstanter Approximationspolynome ist $b(x) = [1]$ und $c = [c1]$. Damit gilt $f(x) = b(x)^T \cdot c = [1] \cdot [c1] = c1$. Bei $N$ einbezogenen Punkten für die Approximation und unter Verwendung von $\alpha$ für die zusätzlichen Bedingungen ist das resultierende Gleichungssystem \\
+$c1 \cdot \sum_{i=1}^N (\theta_{i,1}(x) + \theta_{i,2}(x) + \theta_{i,3}(x)) = \alpha \cdot \sum_{i=1}^N (\theta_{i,2}(x) - \theta_{i,3}(x))$ \\
+Dabei ist $\theta_{i,1}(x)$ die Wendlandfunktion abhängig von $||p_i - x||$, $\theta_{i,2}(x)$ die Wendlandfunktion abhängig von $||p_i + \alpha n_i - x||$ und $\theta_{i,3}(x)$ die Wendlandfunktion abhängig von $||p_i - \alpha n_i - x||$. Stellt man das Gleichungssystem nach $c1 = f(x)$ um, so erhält man \\
+$f(x) = \alpha \cdot \frac{\sum_{i=1}^N (\theta_{i,2}(x) - \theta_{i,3}(x))}{\sum_{i=1}^N (\theta_{i,1}(x) + \theta_{i,2}(x) + \theta_{i,3}(x))}$ \\ Offensichtlich ist $f$ stetig und damit müssen für den Wertebereich der Funktion $inf\{f(x)\}$ und $sup\{f(x)\}$ bestimmt werden. Nach Definition liefert die Wendlandfunktion Werte aus dem Intervall $[0, 1]$. Damit gilt \\
+$sup\{f(x)\} \\
+= sup\{\alpha \cdot \frac{\sum_{i=1}^N (\theta_{i,2}(x) - \theta_{i,3}(x))}{\sum_{i=1}^N (\theta_{i,1}(x) + \theta_{i,2}(x) + \theta_{i,3}(x))}\} \\
+= \alpha \cdot \sum_{i=1}^N sup\{\frac{\theta_{i,2}(x) - \theta_{i,3}(x)}{\sum_{i=1}^N (\theta_{i,1}(x) + \theta_{i,2}(x) + \theta_{i,3}(x))}\} \\
+= \alpha \cdot \sum_{i=1}^N \frac{1}{1} \\
+= \alpha \cdot N$ \\
+Weiter gilt \\
+$inf\{f(x)\} \\
+= inf\{\alpha \cdot \frac{\sum_{i=1}^N (\theta_{i,2}(x) - \theta_{i,3}(x))}{\sum_{i=1}^N (\theta_{i,1}(x) + \theta_{i,2}(x) + \theta_{i,3}(x))}\} \\
+= \alpha \cdot \sum_{i=1}^N inf\{\frac{\theta_{i,2}(x) - \theta_{i,3}(x)}{\sum_{i=1}^N (\theta_{i,1}(x) + \theta_{i,2}(x) + \theta_{i,3}(x))}\} \\
+= \alpha \cdot \sum_{i=1}^N \frac{-1}{1} \\
+= - \alpha \cdot N$. \\
+Damit hat $f$ den Wertebereich $[- \alpha N, + \alpha N]$.
+
+\item Beim Marching Cubes Verfahren kann es zu Aliasing Artefakten kommen. Diese treten zum Beispiel auf, wenn zur Auswertung der Gitterpunkte durch Approximation der impliziten Funktion eine quadratische Polynombasis benutzt wurde. Quadratiscche Polynome haben im Allgemeinen zwei Nullstellen, wobei eine der Nullstellen durch die Berechnung mittels MLS auf der Oberfläche liegt, die zweite Nullstelle im Allgemeinen jedoch nicht. Dadurch kann es zu einem zusätzlichen Vorzeichenwechsel kommen, der vom Marching Cubes Verfahren nicht richtig gedeutet werden kann, wodurch Aliasing Artefakten auftreten können.
+
+\item F\"ur implizite Funktionen $f: \mathbb R^3 \to \mathbb R$ gilt $\triangledown f = (f_x, f_y, f_z)$, wobei $f_x$, $f_y$ und $f_z$ die Ableitung von $f$ nach $x$, $y$ und $z$ sind.\\
+Weiter gilt damit, dass \\
+$f_x = \alpha \cdot \frac{(\sum_{i=1}^N ((\theta_{i,2})_x - (\theta_{i,3})_x)) \cdot (\sum_{i=1}^N ((\theta_{i,1}) + (\theta_{i,2}) + (\theta_{i,3}))) ~-~ (\sum_{i=1}^N ((\theta_{i,2}) - (\theta_{i,3}))) \cdot (\sum_{i=1}^N ((\theta_{i,1})_x + (\theta_{i,2})_x + (\theta_{i,3})_x))}
+{(\sum_{i=1}^N ((\theta_{i,1}) + (\theta_{i,2}) + (\theta_{i,3})))^2}$.\\
+Somit brauchen wir f\"ur den Gradienten die Ableitung der Wendelandfunktionen, also von \\
+$\theta_{i,k} ((x,y,z)^T) = (1 - g_{i,k})^4 \cdot (4 \cdot g_{i,k} + 1)$, wobei \\
+$g_{i,k} = ||c_{i,k} - (x,y,z)^T||_2$, wobei\\
+$c_{i,1} = p_i$, $c_{i,2} = p_i + \alpha n_i$ und $c_{i,3} = p_i - \alpha n_i$ konstant sind.\\
+Dann gilt f\"ur die Ableitung \\
+$\begin{array}{r c l}
+ (g_{i,k})_x ((x,y,z)^T) = - (\sqrt{((c_{i,k})_x - x)^2 + ((c_{i,k})_y - y)^2 + ((c_{i,k})_z - z)^2})^3 \cdot ((c_{i,k})_x - x) \\
+\end{array}$\\
+Analog geht dieses f\"ur $(g_{i,k})_y$ und $(g_{i,k})_z$. Damit gilt für die Ableitung der Wendlandfunktion \\
+$(\theta_{i,k})_x = 4 \cdot (1 - g_{i,k})^3 \cdot (g_{i,k})_x \cdot (4 \cdot g_{i,k} + 1) + (1 - g_{i,k})^4 \cdot 4 \cdot (g_{i,k})_x$, analog für $(\theta_{i,k})_y$ und $(\theta_{i,k})_z$.
+
+
+\end{enumerate}
+\end{document}

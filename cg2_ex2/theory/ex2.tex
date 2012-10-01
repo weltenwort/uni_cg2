@@ -1,0 +1,61 @@
+\documentclass[a4paper,10pt]{scrartcl}
+\usepackage{fancyhdr}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{enumerate}
+\usepackage[top=2cm, left=2cm, bottom=2cm, right=2cm]{geometry}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{float}
+
+\pagestyle{fancy}
+\headheight30pt
+\fancyhf{}
+\fancyhead[L]{\begin{small}Computer Graphics 2\\Übungsblatt 2\\Gruppe 5\end{small}}
+\fancyhead[R]{\begin{small}Stürmer, Felix - 230127 - Informatik(Diplom) - stuermer@cs.tu-berlin.de\\
+  Oskamp, Robert - 306952 - Mathematik(Diplom) - robert.oskamp@gmx.de\\
+  Olthoff, Inken - 305844 - Mathematik(Diplom) - some-body@gmx.de\\
+  Neumann, Cedrik - 301635 - Mathematik(Diplom) - c.neumann@live.de\end{small}}
+\renewcommand{\headrulewidth}{0.4pt}
+
+
+\begin{document}
+\vspace*{5pt}
+\begin{enumerate}[1.]
+
+\item Aus der Vorlesung wissen wir, dass eine B\'ezierkurve folgenderma"sen aussieht:
+$$p(t) = \sum_{i=0}^{n} b_i \cdot B_i^n(t), \hspace*{1.0 cm} t \in [0,1],~ b_i \in R^d$$
+und die dazugeh"orige Ableitung
+$$p'(t) = n \cdot (\sum_{i=0}^{n-1}(b_{i+1} - b_i )B_i^{n-1}(t))$$
+Au"serdem wissen wir, dass f"ur das letzte Segment der durch von de Casteljau erzeugte Kurve folgendes gilt:
+$$p'(t) = n \cdot (b_1^{n-1} (t) - b_0^{n-1}(t))$$
+und man erh"alt durch sukzessives Einsetzen
+$$b_k^{n-1}(t) = \sum_{i=0}^{n-1} {{n-1}\choose{i}} t^i (1-t)^{n-i-1} b_{i+k}$$
+Zusammen gilt dann f"ur das letzte Segment
+$$\begin{array}{ c l }
+p'(t) & = n \cdot (\sum_{i=0}^{n-1} {{{n-1}\choose{i}} t^i (1-t)^{n-i-1} b_{i+1}} - \sum_{i=0}^{n-1} {{{n-1}\choose{i}} t^i (1-t)^{n-i-1} b_{i}})\\
+& = n \cdot (\sum_{i=0}^{n-1} {{{n-1}\choose{i}} t^i (1-t)^{n-i-1} (b_{i+1} - b_{i})})\\
+& = n \cdot (\sum_{i=0}^{n-1} {B_i^{n-1}(t) (b_{i+1} - b_{i})})\\
+\end{array}$$
+Und damit gilt Gleichheit f"ur die Ableitung der Bézierkurve und dem letzten Segment des de Casteljau Algorithmuses. 
+
+\item Wenn eines der beiden Polynome konstant ist, also $p(u) = c$, $c$ konstant, so ist das Tensorprodukt dieses und eines anderen echten linearen Polynoms $q(v)$, keine Fl"ache, sondern eine Kurve, n"amlich $f(u,v) = (p(u), q(v)) = (c, q(v))$, da wir hier nur einen Feiheitsgrad haben. Wenn beide Polynomiale konstant sind, so erhalten wir einen Punkt.\\
+Sei nun keines der Polynome konstant, dann behalten wir unsere zwei Freiheitsgerade und erhalten damit durch das Tensorprodukt eine Fl"ache, d.h. f"ur $p$, $q: \mathbb{R} \mapsto \mathbb{R}$ bijektiv, da wir ein lineares Polynom haben, erhalten wir $f: \mathbb{R} \mapsto \mathbb{R}$, $(u,v) \to f(u,v) = (p(u), q(v))$ bijektiv.
+
+\item Sei $q(u,v)$ eine parametrische Fl"ache im Parametergebiet $[a,b] \times [c,d]$. Analog zum Bogenmaß einer parametrischen Kurve $p(u)$, gegeben durch $s:[a,b] \rightarrow [0,s(b)]$, $s(u) = \int_a^u {||p'(t)||dt}$, ist der Fl"acheninhalt der parametrischen Fl"ache $q(u,v)$ gegeben durch 
+$$A:[a,b] \times [c,d] \mapsto [0,A(b,d)],~ (u,v) \to A(u,v) = \int_a^u \int_c^v {||q_u(s,t) \times q_v(s,t)||dtds}$$
+
+\item Betrachte die parametrische Fläche der Kugel $q(u,v) = \begin{pmatrix}cos(u)cos(v)\\sin(u)cos(v)\\sin(v)\end{pmatrix}$. Dann ist $q_u(u,v) = \begin{pmatrix}-sin(u)cos(v)\\cos(u)cos(v)\\0\end{pmatrix}$ und $q_v(u,v) = \begin{pmatrix}-cos(u)sin(v)\\-sin(u)sin(v)\\cos(v)\end{pmatrix}$. Es gilt aber $||q_u(u,v)|| = cos(v)$ und das ist f"ur alle $v \neq k \cdot \pi$ ungleich $1$ und damit nicht normal, wodurch in diesen Punkten die Tangentenvektoren f"ur keine Parametrisierung der Kugel orthonormal sein k"onnen.
+
+Betrachte nun die parametrisierte Fl"ache $q(u,v) = \begin{pmatrix}cos(u)\\sin(u)\\v\end{pmatrix}$. Dann ist $q_u(u,v) = \begin{pmatrix}-sin(u)\\cos(u)\\0\end{pmatrix}$ und $q_v(u,v) = \begin{pmatrix}0\\0\\1\end{pmatrix}$. Es gilt $||q_u(u,v)|| = \sqrt{sin^2(u) + cos^2(u)} = 1$ und $||q_v(u,v)|| = \sqrt{1^2} = 1$ jeweils f"ur alle $u$ und $v$, die Tangentenvektoren sind also normal. Weiter gilt $\langle q_u, q_v \rangle = -sin(u) \cdot 0 + cos(u) \cdot 0 + 0 \cdot 1 = 0$ f"ur alle $u$ und $v$. Daher sind f"ur diese Parametrisierung die Tangentenvektoren "uberall orthonormal.
+
+\newpage
+\item Wählt man zur lokalen Polynomapproximation konstante Polynome, so haben die Tangenten an jedem Punkt der Fläche Steigung $0$, was im Allgemeinen nicht die tatsächliche Steigung der Flächentangente in jedem Punkt ist.\\
+Als exakte Formel f"ur die Tangenten kann man eine Abwandlung des doppelten de Casteljau Algorithmuses benutzen. Um die Tangente in $u$-Richtung zu erhalten wenden wir den de Casteljau Algorithmus auf die Parameterlinien in $v$-Richtung an (mit festen $v_0$-Wert) und erhalten eine B\'ezierkurve in $u$-Richtung. Als n"achstes berechnen wir mit dem de Casteljau Algorithmus das letzte Segment der B\'ezierkurve in $u$-Richtung. Dieses ist dann "aquivalent zu dem Tangentenvektor in $u$-Richtung (siehe Aufgabe 1). F"ur den Tangentenvektor in $v$-Richtung geht man analog vor.\\
+Damit erhalten wir die beiden Tangentenvektoren, da der de Casteljau Algorithmus in seiner urspr"unglichen Form einen exakten Punkt der Fl"ache berechnen kann. Au"serdem entsprechen die Tangentenvektoren einer Fl"ache in eine Richtung der Tangente der zu dieser Richtung geh"orenden Parameterlinie in dem Punkt.
+
+\end{enumerate}
+\end{document}
